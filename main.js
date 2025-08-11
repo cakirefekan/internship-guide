@@ -305,41 +305,59 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
                 li.prepend(icon);
 
-                // Açıklamaların görünürlüğünü completed ise göster
+                // Açıklamaların görünürlüğünü ayarla
+                const paragraphs = li.querySelectorAll("p");
                 if (completed) {
-                    const paragraphs = li.querySelectorAll("p");
-                    paragraphs.forEach(p => {
-                        p.style.display = "block";
-                    });
-                }
-
-                // Aktif adım kontrolü
-                if (!activeStepKey) {
-                    for (const stage of stages) {
-                        if (deptSteps[stage].length > 0) {
-                            activeStepKey = deptSteps[stage][0].key;
-                            break;
-                        }
+                    // Tamamlanmış maddelerin açıklamaları her zaman gizli
+                    paragraphs.forEach(p => p.style.display = "none");
+                } else {
+                    // Sadece aktif adımın açıklamaları görünsün
+                    if (key === activeStepKey) {
+                        paragraphs.forEach(p => p.style.display = "block");
+                    } else {
+                        paragraphs.forEach(p => p.style.display = "none");
                     }
                 }
+
 
                 if (key === activeStepKey) {
                     li.classList.add("active");
                 } else {
                     li.classList.remove("active");
                 }
-
                 // Tüm maddeler tıklanabilir ve toggle yapılabilir
                 li.style.cursor = "pointer";
                 li.addEventListener("click", () => {
+                    let status = getProcessStatus(deptCode); // mevcut durum
+
+                    // Önceki adım kontrolü
+                    const stepList = deptSteps[stage];
+                    const index = stepList.findIndex(s => s.key === key);
+
+                    if (index > 0) {
+                        const prevKey = stepList[index - 1].key;
+                        if (!status[stage]?.[prevKey]) {
+                            alert("Bu adıma geçmeden önce önceki adımı tamamlamalısınız.");
+                            return;
+                        }
+                    }
+
+                    // Toggle yap
                     toggleStep(deptCode, stage, key);
-                    const status = getProcessStatus(deptCode);
+
+                    // Yeni durumu oku
+                    status = getProcessStatus(deptCode);
+
+                    // Aktif adım belirleme
                     if (status[stage]?.[key]) {
                         activeStepKey = findFirstIncompleteStep(status, processStepsByDept[deptCode]);
                     } else {
                         activeStepKey = key;
                     }
+
+                    // Listeyi yeniden çiz
                     renderChecklist(deptCode, status);
+                    location.reload()
                 });
 
                 container.appendChild(li);
@@ -350,6 +368,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const deptCode = cookieDispatcher.get("department");
     if (deptCode) {
         const status = getProcessStatus(deptCode);
+        activeStepKey = findFirstIncompleteStep(status, processStepsByDept[deptCode]);
+
         renderChecklist(deptCode, status);
         console.log('Loaded processStatus:', status);
 
@@ -432,6 +452,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
     });
 
+    // --- LocalStorage Sıfırlama Butonu Ekle ---
+    const guideContainer = document.querySelector('.guideContainer');
+    if (guideContainer) {
+        const resetBtn = document.createElement('button');
+        resetBtn.textContent = "Staj sürecini baştan başlat";
+        resetBtn.style.marginBottom = "10px";
+        resetBtn.style.padding = "5px 10px";
+        resetBtn.style.cursor = "pointer";
+        resetBtn.style.backgroundColor = "#d9534f";
+        resetBtn.style.color = "white";
+        resetBtn.style.border = "none";
+        resetBtn.style.borderRadius = "4px";
+        resetBtn.addEventListener('click', () => {
+            localStorage.removeItem("processStatus");
+            localStorage.removeItem("process");
+            alert("Süreci baştan takip etmek için sayfa yenileniyor...");
+            location.reload();
+        });
+        guideContainer.prepend(resetBtn);
+    } else {
+        console.warn("Guide container not found, reset button not added.");
+    }
+
 
 
 });
@@ -507,28 +550,7 @@ const localStorageDispatcher = {
 function changeHashWithoutScrolling(hash) {
     const id = hash.replace(/^.*#/, '')
     const elem = document.getElementById(id)
-    elem.id = `${id}-tmp`
+    elem.id = `${id}-tmp`;
     window.location.hash = hash
     elem.id = id
-}
-
-// --- LocalStorage Sıfırlama Butonu Ekle ---
-const guideContainer = document.querySelector('.guideContainer');
-if (guideContainer) {
-    const resetBtn = document.createElement('button');
-    resetBtn.textContent = "LocalStorage'ı Sıfırla";
-    resetBtn.style.marginBottom = "10px";
-    resetBtn.style.padding = "5px 10px";
-    resetBtn.style.cursor = "pointer";
-    resetBtn.style.backgroundColor = "#d9534f";
-    resetBtn.style.color = "white";
-    resetBtn.style.border = "none";
-    resetBtn.style.borderRadius = "4px";
-    resetBtn.addEventListener('click', () => {
-        localStorageDispatcher.delete("processStatus");
-        localStorageDispatcher.delete("process");
-        alert("LocalStorage sıfırlandı. Sayfa yenileniyor...");
-        location.reload();
-    });
-    guideContainer.prepend(resetBtn);
 }

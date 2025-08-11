@@ -66,11 +66,13 @@ main {
 }
 
 main section {
-    padding: 0px 10%;
-    overflow: auto;
-    margin-top: -10em;
-    min-height: calc(100vh + 5em);
-    max-height: calc(100vh );
+padding: 0px 10%;
+overflow: scroll;
+/* overflow-wrap: normal; */
+margin-top: -10em;
+margin-bottom: 10em;
+min-height: calc(100vh - 10em);
+max-height: calc(80vh );
 }
 
 main section:not(:first-child) {
@@ -152,6 +154,8 @@ main section:nth-child(odd) {
 .guideContainer {
     display: flex;
     flex-direction: column;
+    max-height: 75vh;
+    overflow: auto;
 }
 .guideTabs {
     display: flex;
