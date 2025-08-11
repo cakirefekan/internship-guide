@@ -1,0 +1,220 @@
+:root {
+    box-sizing: border-box;
+    --primary-color: #104b8f;
+    --secondary-color: #ead648;
+    --text-color: #333;
+    --header-bg-color: #104b8f;
+    --header-text-color: #ffffff;
+    --bg-color: #fff;
+    --nav-link-color: #ffffff;
+    --prev_bg-color: #90202b;
+    --during_bg_color: #f2a900;
+    --after_bg_color: #1a6f2c;
+    margin: 0px;
+    padding: 0px;
+}
+
+html,
+body {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: inherit;
+}
+
+body {
+    overflow: hidden;
+
+}
+
+header {
+    background-color: var(--header-bg-color);
+    color: var(--header-text-color);
+    padding: 20px 20px 30px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: sticky;
+    top: -2em;
+    z-index: 1000;
+    opacity: 1;
+    margin-bottom: 10em;
+    max-height: 5em;
+}
+
+header nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+header nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+header nav ul li a {
+    text-decoration: none;
+    color: var(--nav-link-color);
+}
+
+main {
+    background-color: var(--bg-color);
+    display: flex;
+    flex: 1;
+    justify-content: stretch;
+    flex-direction: column;
+}
+
+main section {
+    padding: 0px 10%;
+    overflow: auto;
+    margin-top: -10em;
+    min-height: calc(100vh + 5em);
+    max-height: calc(100vh );
+}
+
+main section:not(:first-child) {
+    padding-top: 6em;
+    min-height: calc(100vh + 5em);
+}
+
+main section:last-child {
+    min-height: calc(100vh - 6em);
+    max-height: calc(100vh - 6em);
+}
+
+/*
+ main section:nth-child(even) {
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+}
+main section:nth-child(odd) {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+}
+    */
+
+
+/* The search field */
+#myInput {
+    box-sizing: border-box;
+    background-position: 14px 12px;
+    background-repeat: no-repeat;
+    font-size: 16px;
+    padding: 14px 20px 12px 45px;
+    border: none;
+    border-bottom: 1px solid #ddd;
+    position: sticky;
+    top: -1px;
+}
+
+/* The search field when it gets focus/clicked on */
+#myInput:focus {
+    outline: 3px solid #ddd;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+    position: relative;
+    display: flex;
+
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+    background-color: #f6f6f6;
+    min-width: 230px;
+    border: 1px solid #ddd;
+    z-index: 1;
+    max-height: 12em;
+    min-height: 12em;
+    overflow: auto;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {
+    background-color: #f1f1f1
+}
+
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+.show {
+    display: block;
+}
+
+.guideContainer {
+    display: flex;
+    flex-direction: column;
+}
+.guideTabs {
+    display: flex;
+    justify-content: space-around;
+    background-color: var(--primary-color);
+}
+.guideTabs a {
+    color: var(--nav-link-color);
+    text-decoration: none;
+    padding: 20px 0;
+    width: 100%;
+    text-align: center;
+}
+.guideTabs a:first-child {
+    background-color: var(--prev_bg-color);
+}
+.guideTabs a {
+    background-color: var(--during_bg_color);     
+        text-shadow: #000 0px 0px 2px;      
+  
+}
+.guideTabs a:last-child {
+    background-color: var(--after_bg_color);       
+}
+.guideContent {
+    padding: 20px;
+    border: #000 5px solid;
+    color: var(--text-color);
+}
+.guideSection {
+    display: none;
+}
+
+.checklist-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.checklist-list li {
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    color:var(--text-color)
+}
+
+.checklist-list li.completed  {
+    background-color: rgba(255,255,255,0.5);
+}
+.checklist-list .icon {
+    margin: 0px 10px;
+    color: #888;
+    text-decoration: none !important;
+}
+
+.checklist-list li.completed > * {
+    text-decoration: line-through;
+}
+
+.checklist-list li.completed > p {
+    display: none !important;
+}
+.checklist-list li.active > p {
+    display: block !important;
+}
